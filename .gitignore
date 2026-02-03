@@ -1,0 +1,38 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Android Studio / IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+.idea_modules/
+
+# Local configuration
+local.properties
+
+# Keystore files
+*.jks
+*.keystore
+
+# APK files
+*.apk
+*.aab
+
+# Generated files
+*.dex
+*.class
+bin/
+gen/
+out/
+
+# Mac OS
+.DS_Store
+
+# Log files
+*.log
+
+# Signing configs
+signing.properties

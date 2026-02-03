@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Disco Timer</string>
+    <string name="work">Work</string>
+    <string name="cycles">Cycles</string>
+    <string name="sets">Sets</string>
+    <string name="start">Start</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
+    <string name="intervals">intervals</string>
+    <string name="congratulations">Congratulation!</string>
+    <string name="training_complete">You finished your training</string>
+    <string name="exit_confirmation">Are you sure you want to go back?</string>
+    <string name="yes">YES</string>
+    <string name="cancel">Cancel</string>
+    <string name="hold_on">Hold on!</string>
+</resources>
