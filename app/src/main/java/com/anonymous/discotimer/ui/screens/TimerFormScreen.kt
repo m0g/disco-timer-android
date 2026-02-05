@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -93,9 +94,10 @@ fun TimerFormScreen(
                         .align(Alignment.TopEnd)
                         .padding(top = 16.dp, end = 6.dp)
                 ) {
-                    Text(
-                        text = if (timerState.isMuted) "🔇" else "🔊",
-                        fontSize = 48.sp
+                    Icon(
+                        painter = painterResource(id = if (timerState.isMuted) R.drawable.volume_off_48 else R.drawable.volume_up_48),
+                        contentDescription = if (timerState.isMuted) "Unmute" else "Mute",
+                        tint = Color.White
                     )
                 }
             }
@@ -148,6 +150,7 @@ fun TimerFormScreen(
             ) {
                 Text(
                     text = stringResource(R.string.start),
+                    color = Color.White,
                     fontSize = 20.sp
                 )
             }

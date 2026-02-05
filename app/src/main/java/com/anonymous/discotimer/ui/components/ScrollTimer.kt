@@ -1,14 +1,14 @@
 package com.anonymous.discotimer.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Text
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -45,11 +45,15 @@ fun ScrollTimer(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(if (index == 0) CurrentIntervalBackground else Color.Transparent)
-                    .border(
-                        width = 2.dp,
-                        color = BorderColor,
-                        shape = RectangleShape
-                    )
+                    .drawBehind {
+                        val strokeWidth = 2.dp.toPx()
+                        drawLine(
+                            color = BorderColor,
+                            start = Offset(0f, size.height),
+                            end = Offset(size.width, size.height),
+                            strokeWidth = strokeWidth
+                        )
+                    }
                     .padding(vertical = 10.dp)
             )
         }

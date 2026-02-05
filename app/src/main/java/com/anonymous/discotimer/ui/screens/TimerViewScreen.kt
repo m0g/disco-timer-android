@@ -14,6 +14,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import com.anonymous.discotimer.R
 import com.anonymous.discotimer.ui.components.*
 import com.anonymous.discotimer.ui.theme.BorderColor
@@ -73,15 +76,25 @@ fun TimerViewScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.Transparent)
-                        .border(width = 2.dp, color = BorderColor)
+                        // .border(width = 2.dp, color = BorderColor)
+                        .drawBehind {
+                            val strokeWidth = 2.dp.toPx()
+                            drawLine(
+                                color = BorderColor,
+                                start = Offset(0f, size.height),
+                                end = Offset(size.width, size.height),
+                                strokeWidth = strokeWidth
+                            )
+                        }
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceAround,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(onClick = { viewModel.togglePause() }) {
-                        Text(
-                            text = if (timerState.isPaused) "▶️" else "⏸️",
-                            fontSize = 48.sp
+                        Icon(
+                            painter = painterResource(id = if (timerState.isPaused) R.drawable.play_arrow_48 else R.drawable.pause_48),
+                            contentDescription = if (timerState.isPaused) "Play" else "Pause",
+                            tint = Color.White
                         )
                     }
 
@@ -93,9 +106,10 @@ fun TimerViewScreen(
                     )
 
                     IconButton(onClick = { viewModel.toggleMute() }) {
-                        Text(
-                            text = if (timerState.isMuted) "🔇" else "🔊",
-                            fontSize = 48.sp
+                        Icon(
+                            painter = painterResource(id = if (timerState.isMuted) R.drawable.volume_off_48 else R.drawable.volume_up_48),
+                            contentDescription = if (timerState.isMuted) "Unmute" else "Mute",
+                            tint = Color.White
                         )
                     }
                 }

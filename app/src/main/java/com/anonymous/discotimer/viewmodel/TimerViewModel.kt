@@ -94,28 +94,36 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
         timerJob = viewModelScope.launch {
             while (_timerState.value.currentTime < _timerState.value.totalTime) {
                 if (!_timerState.value.isPaused) {
-                    delay(1000)
-
-                    val newTime = _timerState.value.currentTime + 1
-                    _timerState.value = _timerState.value.copy(currentTime = newTime)
-
-                    // Play beep sound when work timer is 3 or less
-                    if (_timerState.value.currentWorkTime <= 3 && !_timerState.value.isMuted) {
-                        playBeep()
-                        vibrate()
+                    // Break 1-second delay into smaller chunks for responsive pause
+                    var elapsedMs = 0
+                    while (elapsedMs < 1000 && !_timerState.value.isPaused) {
+                        delay(50)
+                        elapsedMs += 50
                     }
 
-                    // Check if timer is complete
-                    if (newTime >= _timerState.value.totalTime) {
-                        _timerState.value = _timerState.value.copy(isCompleted = true)
-                        if (!_timerState.value.isMuted) {
-                            playFinish()
+                    // Only increment time if we completed the full second without pausing
+                    if (!_timerState.value.isPaused) {
+                        val newTime = _timerState.value.currentTime + 1
+                        _timerState.value = _timerState.value.copy(currentTime = newTime)
+
+                        // Play beep sound when work timer is 3 or less
+                        if (_timerState.value.currentWorkTime <= 3 && !_timerState.value.isMuted) {
+                            playBeep()
                             vibrate()
                         }
-                        releaseWakeLock()
+
+                        // Check if timer is complete
+                        if (newTime >= _timerState.value.totalTime) {
+                            _timerState.value = _timerState.value.copy(isCompleted = true)
+                            if (!_timerState.value.isMuted) {
+                                playFinish()
+                                vibrate()
+                            }
+                            releaseWakeLock()
+                        }
                     }
                 } else {
-                    delay(100) // Check pause state more frequently
+                    delay(50) // Check pause state frequently
                 }
             }
         }
