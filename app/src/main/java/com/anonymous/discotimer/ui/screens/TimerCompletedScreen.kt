@@ -2,6 +2,9 @@ package com.anonymous.discotimer.ui.screens
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -57,6 +60,25 @@ fun TimerCompletedScreen(
                 color = Color.White,
                 textAlign = TextAlign.Center
             )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Button(
+                onClick = { onNavigateBack() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .padding(horizontal = 10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
+            ) {
+                Text(
+                    text = stringResource(R.string.start_again),
+                    color = Color.White,
+                    fontSize = 20.sp
+                )
+            }
         }
     }
 }

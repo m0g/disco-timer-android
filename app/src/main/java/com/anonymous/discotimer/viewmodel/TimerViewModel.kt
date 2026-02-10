@@ -1,17 +1,14 @@
 package com.anonymous.discotimer.viewmodel
 
 import android.app.Application
-import android.content.Context
-import android.media.MediaPlayer
-import android.os.PowerManager
-import android.os.Vibrator
+import android.content.Intent
+import android.os.Build
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.anonymous.discotimer.R
 import com.anonymous.discotimer.data.TimerPreferences
 import com.anonymous.discotimer.data.TimerState
+import com.anonymous.discotimer.service.TimerService
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,15 +22,13 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
     private val _timerState = MutableStateFlow(TimerState())
     val timerState: StateFlow<TimerState> = _timerState.asStateFlow()
 
-    private var timerJob: Job? = null
-    private var beepPlayer: MediaPlayer? = null
-    private var finishPlayer: MediaPlayer? = null
-    private val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-    private var wakeLock: PowerManager.WakeLock? = null
+    private var observeJob: Job? = null
 
     init {
         loadPreferences()
-        initializeMediaPlayers()
+        if (TimerService.isRunning) {
+            observeServiceState()
+        }
     }
 
     private fun loadPreferences() {
@@ -50,11 +45,6 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
                 isMuted = isMuted
             )
         }
-    }
-
-    private fun initializeMediaPlayers() {
-        beepPlayer = MediaPlayer.create(context, R.raw.beep)
-        finishPlayer = MediaPlayer.create(context, R.raw.finish)
     }
 
     fun setWork(work: Int) {
@@ -84,108 +74,51 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             preferences.setMuted(newMutedState)
         }
+        if (TimerService.isRunning) {
+            sendServiceAction(TimerService.ACTION_TOGGLE_MUTE)
+        }
     }
 
     fun startTimer() {
-        acquireWakeLock()
-        _timerState.value = _timerState.value.copy(currentTime = 0, isPaused = false, isCompleted = false)
-
-        timerJob?.cancel()
-        timerJob = viewModelScope.launch {
-            while (_timerState.value.currentTime < _timerState.value.totalTime) {
-                if (!_timerState.value.isPaused) {
-                    // Break 1-second delay into smaller chunks for responsive pause
-                    var elapsedMs = 0
-                    while (elapsedMs < 1000 && !_timerState.value.isPaused) {
-                        delay(50)
-                        elapsedMs += 50
-                    }
-
-                    // Only increment time if we completed the full second without pausing
-                    if (!_timerState.value.isPaused) {
-                        val newTime = _timerState.value.currentTime + 1
-                        _timerState.value = _timerState.value.copy(currentTime = newTime)
-
-                        // Play beep sound when work timer is 3 or less
-                        if (_timerState.value.currentWorkTime <= 3 && !_timerState.value.isMuted) {
-                            playBeep()
-                            vibrate()
-                        }
-
-                        // Check if timer is complete
-                        if (newTime >= _timerState.value.totalTime) {
-                            _timerState.value = _timerState.value.copy(isCompleted = true)
-                            if (!_timerState.value.isMuted) {
-                                playFinish()
-                                vibrate()
-                            }
-                            releaseWakeLock()
-                        }
-                    }
-                } else {
-                    delay(50) // Check pause state frequently
-                }
-            }
+        val state = _timerState.value
+        val intent = Intent(context, TimerService::class.java).apply {
+            action = TimerService.ACTION_START
+            putExtra(TimerService.EXTRA_WORK, state.work)
+            putExtra(TimerService.EXTRA_CYCLES, state.cycles)
+            putExtra(TimerService.EXTRA_SETS, state.sets)
+            putExtra(TimerService.EXTRA_MUTED, state.isMuted)
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(intent)
+        } else {
+            context.startService(intent)
+        }
+        observeServiceState()
     }
 
     fun togglePause() {
-        _timerState.value = _timerState.value.copy(isPaused = !_timerState.value.isPaused)
+        sendServiceAction(TimerService.ACTION_PAUSE)
     }
 
     fun resetTimer() {
-        timerJob?.cancel()
-        _timerState.value = _timerState.value.copy(
-            currentTime = 0,
-            isPaused = false,
-            isCompleted = false
-        )
-        releaseWakeLock()
+        sendServiceAction(TimerService.ACTION_RESET)
+        observeJob?.cancel()
+        observeJob = null
     }
 
-    private fun playBeep() {
-        beepPlayer?.let {
-            it.seekTo(0)
-            it.start()
+    private fun sendServiceAction(action: String) {
+        val intent = Intent(context, TimerService::class.java).apply {
+            this.action = action
         }
+        context.startService(intent)
     }
 
-    private fun playFinish() {
-        finishPlayer?.let {
-            it.seekTo(0)
-            it.start()
-        }
-    }
-
-    private fun vibrate() {
-        @Suppress("DEPRECATION")
-        vibrator.vibrate(200)
-    }
-
-    private fun acquireWakeLock() {
-        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-        wakeLock = powerManager.newWakeLock(
-            PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
-            "DiscoTimer::TimerWakeLock"
-        ).apply {
-            acquire(10 * 60 * 60 * 1000L) // 10 hours max
-        }
-    }
-
-    private fun releaseWakeLock() {
-        wakeLock?.let {
-            if (it.isHeld) {
-                it.release()
+    private fun observeServiceState() {
+        observeJob?.cancel()
+        observeJob = viewModelScope.launch {
+            TimerService.timerState.collect { serviceState ->
+                _timerState.value = serviceState.copy(isMuted = _timerState.value.isMuted)
             }
         }
-        wakeLock = null
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        timerJob?.cancel()
-        beepPlayer?.release()
-        finishPlayer?.release()
-        releaseWakeLock()
     }
 }
