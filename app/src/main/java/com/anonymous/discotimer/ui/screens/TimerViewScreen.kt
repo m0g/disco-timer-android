@@ -1,5 +1,6 @@
 package com.anonymous.discotimer.ui.screens
 
+import android.view.WindowManager
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -30,6 +32,15 @@ fun TimerViewScreen(
 ) {
     val timerState by viewModel.timerState.collectAsState()
     var showBackDialog by remember { mutableStateOf(false) }
+
+    // Keep screen on while timer is running
+    val activity = LocalContext.current as? android.app.Activity
+    DisposableEffect(Unit) {
+        activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        onDispose {
+            activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+    }
 
     BackHandler {
         showBackDialog = true

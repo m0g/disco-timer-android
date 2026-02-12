@@ -79,6 +79,7 @@ class TimerService : Service() {
                 val muted = intent.getBooleanExtra(EXTRA_MUTED, false)
                 startTimer(work, cycles, sets, muted)
             }
+
             ACTION_PAUSE -> togglePause()
             ACTION_TOGGLE_MUTE -> toggleMute()
             ACTION_RESET -> resetAndStop()
@@ -201,7 +202,8 @@ class TimerService : Service() {
 
         val timeText = TimeFormatter.formatSeconds(state.remainingTime)
         val currentWorkText = TimeFormatter.formatSeconds(state.currentWorkTime)
-        val pauseLabel = if (state.isPaused) "Paused" else "Total ${timeText} - Set ${state.currentSet} - Cycle ${state.currentCycle}"
+        val pauseLabel =
+            if (state.isPaused) "Paused" else "Total ${timeText} - Set ${state.currentSet} - Cycle ${state.currentCycle}"
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(currentWorkText)
@@ -256,6 +258,11 @@ class TimerService : Service() {
             if (it.isHeld) it.release()
         }
         wakeLock = null
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+        resetAndStop()
     }
 
     override fun onDestroy() {

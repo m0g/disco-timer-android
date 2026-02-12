@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.anonymous.discotimer.BuildConfig
 import com.anonymous.discotimer.R
 import com.anonymous.discotimer.ui.components.GradientBackground
 import com.anonymous.discotimer.ui.components.InputRow
@@ -157,5 +158,15 @@ fun TimerFormScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
         }
+
+        Text(
+            text = "v${BuildConfig.VERSION_NAME}",
+            fontSize = 12.sp,
+            color = Color.White.copy(alpha = 0.5f),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(horizontal = 16.dp)
+                .navigationBarsPadding()
+        )
     }
 }
