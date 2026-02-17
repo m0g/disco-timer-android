@@ -131,6 +131,14 @@ fun TimerFormScreen(
                     onValueChange = { viewModel.setSets(it) },
                     minValue = 1
                 )
+
+                InputRow(
+                    label = stringResource(R.string.prepare),
+                    value = timerState.prepare,
+                    onValueChange = { viewModel.setPrepare(it) },
+                    minValue = 0,
+                    step = 5
+                )
             }
 
             Spacer(modifier = Modifier.height(20.dp))

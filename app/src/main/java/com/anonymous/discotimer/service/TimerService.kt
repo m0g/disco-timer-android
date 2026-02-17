@@ -39,6 +39,7 @@ class TimerService : Service() {
         const val EXTRA_CYCLES = "extra_cycles"
         const val EXTRA_SETS = "extra_sets"
         const val EXTRA_MUTED = "extra_muted"
+        const val EXTRA_PREPARE = "extra_prepare"
 
         private const val CHANNEL_ID = "disco_timer_channel"
         private const val NOTIFICATION_ID = 1
@@ -77,7 +78,8 @@ class TimerService : Service() {
                 val cycles = intent.getIntExtra(EXTRA_CYCLES, 3)
                 val sets = intent.getIntExtra(EXTRA_SETS, 2)
                 val muted = intent.getBooleanExtra(EXTRA_MUTED, false)
-                startTimer(work, cycles, sets, muted)
+                val prepare = intent.getIntExtra(EXTRA_PREPARE, 0)
+                startTimer(work, cycles, sets, muted, prepare)
             }
 
             ACTION_PAUSE -> togglePause()
@@ -87,29 +89,66 @@ class TimerService : Service() {
         return START_NOT_STICKY
     }
 
-    private fun startTimer(work: Int, cycles: Int, sets: Int, muted: Boolean) {
+    private fun startTimer(work: Int, cycles: Int, sets: Int, muted: Boolean, prepare: Int = 0) {
         isRunning = true
         acquireWakeLock()
+
+        val hasPrepare = prepare > 0
 
         _timerState.value = TimerState(
             work = work,
             cycles = cycles,
             sets = sets,
+            prepare = prepare,
             currentTime = 0,
             isPaused = false,
             isCompleted = false,
-            isMuted = muted
+            isMuted = muted,
+            isPreparing = hasPrepare,
+            prepareTimeRemaining = prepare
         )
 
         startForeground(NOTIFICATION_ID, buildNotification())
 
-        if (!muted) {
-            playWhistle()
-            vibrate()
-        }
-
         timerJob?.cancel()
         timerJob = serviceScope.launch {
+            // Prepare countdown phase
+            if (hasPrepare) {
+                while (_timerState.value.prepareTimeRemaining > 0) {
+                    if (!_timerState.value.isPaused) {
+                        var elapsedMs = 0
+                        while (elapsedMs < 1000 && !_timerState.value.isPaused) {
+                            delay(50)
+                            elapsedMs += 50
+                        }
+
+                        if (!_timerState.value.isPaused) {
+                            val newRemaining = _timerState.value.prepareTimeRemaining - 1
+                            _timerState.value = _timerState.value.copy(prepareTimeRemaining = newRemaining)
+
+                            if (newRemaining <= 3 && newRemaining > 0 && !_timerState.value.isMuted) {
+                                playBeep()
+                                vibrate()
+                            }
+
+                            updateNotification()
+                        }
+                    } else {
+                        delay(50)
+                    }
+                }
+
+                // Transition from prepare to workout
+                _timerState.value = _timerState.value.copy(isPreparing = false)
+            }
+
+            // Play whistle at workout start
+            if (!_timerState.value.isMuted) {
+                playWhistle()
+                vibrate()
+            }
+
+            // Main workout timer loop
             while (_timerState.value.currentTime < _timerState.value.totalTime) {
                 if (!_timerState.value.isPaused) {
                     var elapsedMs = 0
@@ -168,7 +207,9 @@ class TimerService : Service() {
         _timerState.value = _timerState.value.copy(
             currentTime = 0,
             isPaused = false,
-            isCompleted = false
+            isCompleted = false,
+            isPreparing = false,
+            prepareTimeRemaining = 0
         )
         releaseWakeLock()
         stopForeground(STOP_FOREGROUND_REMOVE)
@@ -200,14 +241,22 @@ class TimerService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val timeText = TimeFormatter.formatSeconds(state.remainingTime)
-        val currentWorkText = TimeFormatter.formatSeconds(state.currentWorkTime)
-        val pauseLabel =
-            if (state.isPaused) "Paused" else "Total ${timeText} - Set ${state.currentSet} - Cycle ${state.currentCycle}"
+        val contentTitle: String
+        val contentText: String
+
+        if (state.isPreparing) {
+            contentTitle = TimeFormatter.formatSeconds(state.prepareTimeRemaining)
+            contentText = if (state.isPaused) "Paused" else "Get ready..."
+        } else {
+            contentTitle = TimeFormatter.formatSeconds(state.currentWorkTime)
+            val timeText = TimeFormatter.formatSeconds(state.remainingTime)
+            contentText =
+                if (state.isPaused) "Paused" else "Total ${timeText} - Set ${state.currentSet} - Cycle ${state.currentCycle}"
+        }
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle(currentWorkText)
-            .setContentText(pauseLabel)
+            .setContentTitle(contentTitle)
+            .setContentText(contentText)
             .setSmallIcon(R.drawable.ic_timer)
             .setOngoing(true)
             .setSilent(true)

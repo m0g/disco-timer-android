@@ -4,6 +4,8 @@
     <string name="work">Work</string>
     <string name="cycles">Cycles</string>
     <string name="sets">Sets</string>
+    <string name="prepare">Prepare</string>
+    <string name="get_ready">Get Ready!</string>
     <string name="start">Start</string>
     <string name="pause">Pause</string>
     <string name="resume">Resume</string>

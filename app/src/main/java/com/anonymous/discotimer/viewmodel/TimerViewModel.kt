@@ -37,12 +37,14 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
             val cycles = preferences.cycles.first()
             val sets = preferences.sets.first()
             val isMuted = preferences.isMuted.first()
+            val prepare = preferences.prepare.first()
 
             _timerState.value = _timerState.value.copy(
                 work = work,
                 cycles = cycles,
                 sets = sets,
-                isMuted = isMuted
+                isMuted = isMuted,
+                prepare = prepare
             )
         }
     }
@@ -68,6 +70,13 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun setPrepare(prepare: Int) {
+        _timerState.value = _timerState.value.copy(prepare = prepare)
+        viewModelScope.launch {
+            preferences.setPrepare(prepare)
+        }
+    }
+
     fun toggleMute() {
         val newMutedState = !_timerState.value.isMuted
         _timerState.value = _timerState.value.copy(isMuted = newMutedState)
@@ -87,6 +96,7 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
             putExtra(TimerService.EXTRA_CYCLES, state.cycles)
             putExtra(TimerService.EXTRA_SETS, state.sets)
             putExtra(TimerService.EXTRA_MUTED, state.isMuted)
+            putExtra(TimerService.EXTRA_PREPARE, state.prepare)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(intent)

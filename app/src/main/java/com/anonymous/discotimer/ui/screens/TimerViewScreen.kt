@@ -24,6 +24,7 @@ import com.anonymous.discotimer.ui.components.*
 import com.anonymous.discotimer.ui.theme.BorderColor
 import com.anonymous.discotimer.utils.TimeFormatter
 import com.anonymous.discotimer.viewmodel.TimerViewModel
+import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 fun TimerViewScreen(
@@ -75,6 +76,34 @@ fun TimerViewScreen(
             viewModel.resetTimer()
             onNavigateBack()
         })
+    } else if (timerState.isPreparing) {
+        GradientBackground {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .statusBarsPadding()
+                    .navigationBarsPadding(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.get_ready),
+                    fontSize = 36.sp,
+                    color = Color.White,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Text(
+                    text = "${timerState.prepareTimeRemaining}",
+                    fontSize = 160.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
     } else {
         GradientBackground {
             Column(

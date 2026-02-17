@@ -4,10 +4,13 @@ data class TimerState(
     val work: Int = 40,
     val cycles: Int = 3,
     val sets: Int = 2,
+    val prepare: Int = 0,
     val currentTime: Int = 0,
     val isPaused: Boolean = false,
     val isCompleted: Boolean = false,
-    val isMuted: Boolean = false
+    val isMuted: Boolean = false,
+    val isPreparing: Boolean = false,
+    val prepareTimeRemaining: Int = 0
 ) {
     val totalTime: Int
         get() = work * cycles * sets

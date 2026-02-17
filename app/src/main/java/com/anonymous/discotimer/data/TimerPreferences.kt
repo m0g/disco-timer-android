@@ -19,6 +19,7 @@ class TimerPreferences(private val context: Context) {
         private val CYCLES_KEY = intPreferencesKey("cycles")
         private val SETS_KEY = intPreferencesKey("sets")
         private val IS_MUTED_KEY = booleanPreferencesKey("isMuted")
+        private val PREPARE_KEY = intPreferencesKey("prepare")
     }
 
     val work: Flow<Int> = context.dataStore.data.map { preferences ->
@@ -35,6 +36,10 @@ class TimerPreferences(private val context: Context) {
 
     val isMuted: Flow<Boolean> = context.dataStore.data.map { preferences ->
         preferences[IS_MUTED_KEY] ?: false
+    }
+
+    val prepare: Flow<Int> = context.dataStore.data.map { preferences ->
+        preferences[PREPARE_KEY] ?: 0
     }
 
     suspend fun setWork(work: Int) {
@@ -58,6 +63,12 @@ class TimerPreferences(private val context: Context) {
     suspend fun setMuted(muted: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[IS_MUTED_KEY] = muted
+        }
+    }
+
+    suspend fun setPrepare(prepare: Int) {
+        context.dataStore.edit { preferences ->
+            preferences[PREPARE_KEY] = prepare
         }
     }
 }
