@@ -10,11 +10,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.ExperimentalTextApi
+import com.anonymous.discotimer.R
 import com.anonymous.discotimer.ui.theme.BorderColor
+
+@OptIn(ExperimentalTextApi::class)
+private val RobotoFlex = FontFamily(
+    Font(
+        R.font.roboto_flex,
+        variationSettings = FontVariation.Settings(
+            FontVariation.weight(1000),
+            FontVariation.width(151f),
+            FontVariation.slant(-5f),
+        )
+    )
+)
 
 @Composable
 fun WorkTimer(
@@ -40,7 +57,8 @@ fun WorkTimer(
         Text(
             text = currentWorkTime.toString(),
             fontSize = 192.sp,
-            fontWeight = FontWeight.Bold,
+            fontFamily = RobotoFlex,
+            // fontWeight = FontWeight.Black,
             color = Color.White,
             textAlign = TextAlign.Center
         )
