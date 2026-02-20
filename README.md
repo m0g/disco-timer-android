@@ -2,6 +2,13 @@
 
 This is a native Android implementation of the Disco Timer app using Kotlin and Jetpack Compose.
 
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/timer_form.jpeg" width="300" alt="Timer configuration screen" />
+  <img src="screenshots/timer_running.jpeg" width="300" alt="Timer running screen" />
+</p>
+
 ## Features
 
 - ✅ Workout interval timer with work periods, cycles, and sets
