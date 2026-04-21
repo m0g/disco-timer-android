@@ -116,6 +116,15 @@ class TimerViewModel(application: Application) : AndroidViewModel(application) {
         observeJob = null
     }
 
+    fun jumpToInterval(index: Int) {
+        if (!TimerService.isRunning) return
+        val intent = Intent(context, TimerService::class.java).apply {
+            action = TimerService.ACTION_JUMP_TO_INTERVAL
+            putExtra(TimerService.EXTRA_INTERVAL_INDEX, index)
+        }
+        context.startService(intent)
+    }
+
     private fun sendServiceAction(action: String) {
         val intent = Intent(context, TimerService::class.java).apply {
             this.action = action

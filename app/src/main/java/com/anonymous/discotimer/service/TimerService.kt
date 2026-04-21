@@ -34,12 +34,14 @@ class TimerService : Service() {
         const val ACTION_PAUSE = "com.anonymous.discotimer.ACTION_PAUSE"
         const val ACTION_TOGGLE_MUTE = "com.anonymous.discotimer.ACTION_TOGGLE_MUTE"
         const val ACTION_RESET = "com.anonymous.discotimer.ACTION_RESET"
+        const val ACTION_JUMP_TO_INTERVAL = "com.anonymous.discotimer.ACTION_JUMP_TO_INTERVAL"
 
         const val EXTRA_WORK = "extra_work"
         const val EXTRA_CYCLES = "extra_cycles"
         const val EXTRA_SETS = "extra_sets"
         const val EXTRA_MUTED = "extra_muted"
         const val EXTRA_PREPARE = "extra_prepare"
+        const val EXTRA_INTERVAL_INDEX = "extra_interval_index"
 
         private const val CHANNEL_ID = "disco_timer_channel"
         private const val NOTIFICATION_ID = 1
@@ -85,6 +87,10 @@ class TimerService : Service() {
             ACTION_PAUSE -> togglePause()
             ACTION_TOGGLE_MUTE -> toggleMute()
             ACTION_RESET -> resetAndStop()
+            ACTION_JUMP_TO_INTERVAL -> {
+                val index = intent.getIntExtra(EXTRA_INTERVAL_INDEX, -1)
+                if (index >= 0) jumpToInterval(index)
+            }
         }
         return START_NOT_STICKY
     }
@@ -195,6 +201,14 @@ class TimerService : Service() {
 
     private fun togglePause() {
         _timerState.value = _timerState.value.copy(isPaused = !_timerState.value.isPaused)
+        updateNotification()
+    }
+
+    private fun jumpToInterval(index: Int) {
+        val state = _timerState.value
+        val maxIndex = (state.totalIntervals - 1).coerceAtLeast(0)
+        val clamped = index.coerceIn(0, maxIndex)
+        _timerState.value = state.copy(currentTime = clamped * state.work)
         updateNotification()
     }
 

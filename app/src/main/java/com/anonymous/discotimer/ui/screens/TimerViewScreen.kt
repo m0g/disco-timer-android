@@ -167,6 +167,7 @@ fun TimerViewScreen(
                     cycles = timerState.cycles,
                     sets = timerState.sets,
                     currentTime = timerState.currentTime,
+                    onIntervalClick = { viewModel.jumpToInterval(it) },
                     modifier = Modifier.weight(1f)
                 )
 

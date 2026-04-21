@@ -1,6 +1,7 @@
 package com.anonymous.discotimer.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -25,6 +26,7 @@ fun ScrollTimer(
     cycles: Int,
     sets: Int,
     currentTime: Int,
+    onIntervalClick: (Int) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val totalIntervals = cycles * sets
@@ -58,6 +60,7 @@ fun ScrollTimer(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(itemHeight)
+                        .clickable { onIntervalClick(index) }
                         .background(if (index == currentIndex) CurrentIntervalBackground else Color.Transparent)
                         .drawBehind {
                             val strokeWidth = 2.dp.toPx()
