@@ -36,3 +36,4 @@ out/
 
 # Signing configs
 signing.properties
+keystore.properties
