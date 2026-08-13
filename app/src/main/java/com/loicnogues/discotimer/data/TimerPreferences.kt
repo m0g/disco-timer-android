@@ -1,4 +1,4 @@
-package com.anonymous.discotimer.data
+package com.loicnogues.discotimer.data
 
 import android.content.Context
 import androidx.datastore.core.DataStore

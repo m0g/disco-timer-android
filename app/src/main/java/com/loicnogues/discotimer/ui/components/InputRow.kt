@@ -1,4 +1,4 @@
-package com.anonymous.discotimer.ui.components
+package com.loicnogues.discotimer.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField

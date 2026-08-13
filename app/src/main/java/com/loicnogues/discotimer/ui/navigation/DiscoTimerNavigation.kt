@@ -1,13 +1,13 @@
-package com.anonymous.discotimer.ui.navigation
+package com.loicnogues.discotimer.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.anonymous.discotimer.ui.screens.TimerFormScreen
-import com.anonymous.discotimer.ui.screens.TimerViewScreen
-import com.anonymous.discotimer.viewmodel.TimerViewModel
+import com.loicnogues.discotimer.ui.screens.TimerFormScreen
+import com.loicnogues.discotimer.ui.screens.TimerViewScreen
+import com.loicnogues.discotimer.viewmodel.TimerViewModel
 
 sealed class Screen(val route: String) {
     object TimerForm : Screen("timer_form")

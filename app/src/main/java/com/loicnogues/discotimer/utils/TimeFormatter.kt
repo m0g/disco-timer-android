@@ -1,4 +1,4 @@
-package com.anonymous.discotimer.utils
+package com.loicnogues.discotimer.utils
 
 object TimeFormatter {
     fun formatSeconds(seconds: Int): String {

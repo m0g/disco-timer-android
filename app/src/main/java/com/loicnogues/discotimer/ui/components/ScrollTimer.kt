@@ -1,4 +1,4 @@
-package com.anonymous.discotimer.ui.components
+package com.loicnogues.discotimer.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,8 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.anonymous.discotimer.ui.theme.BorderColor
-import com.anonymous.discotimer.ui.theme.CurrentIntervalBackground
+import com.loicnogues.discotimer.ui.theme.BorderColor
+import com.loicnogues.discotimer.ui.theme.CurrentIntervalBackground
 
 @Composable
 fun ScrollTimer(

@@ -1,4 +1,4 @@
-package com.anonymous.discotimer.service
+package com.loicnogues.discotimer.service
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -12,10 +12,10 @@ import android.os.IBinder
 import android.os.PowerManager
 import android.os.Vibrator
 import androidx.core.app.NotificationCompat
-import com.anonymous.discotimer.MainActivity
-import com.anonymous.discotimer.R
-import com.anonymous.discotimer.data.TimerState
-import com.anonymous.discotimer.utils.TimeFormatter
+import com.loicnogues.discotimer.MainActivity
+import com.loicnogues.discotimer.R
+import com.loicnogues.discotimer.data.TimerState
+import com.loicnogues.discotimer.utils.TimeFormatter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -30,11 +30,11 @@ import kotlinx.coroutines.launch
 class TimerService : Service() {
 
     companion object {
-        const val ACTION_START = "com.anonymous.discotimer.ACTION_START"
-        const val ACTION_PAUSE = "com.anonymous.discotimer.ACTION_PAUSE"
-        const val ACTION_TOGGLE_MUTE = "com.anonymous.discotimer.ACTION_TOGGLE_MUTE"
-        const val ACTION_RESET = "com.anonymous.discotimer.ACTION_RESET"
-        const val ACTION_JUMP_TO_INTERVAL = "com.anonymous.discotimer.ACTION_JUMP_TO_INTERVAL"
+        const val ACTION_START = "com.loicnogues.discotimer.ACTION_START"
+        const val ACTION_PAUSE = "com.loicnogues.discotimer.ACTION_PAUSE"
+        const val ACTION_TOGGLE_MUTE = "com.loicnogues.discotimer.ACTION_TOGGLE_MUTE"
+        const val ACTION_RESET = "com.loicnogues.discotimer.ACTION_RESET"
+        const val ACTION_JUMP_TO_INTERVAL = "com.loicnogues.discotimer.ACTION_JUMP_TO_INTERVAL"
 
         const val EXTRA_WORK = "extra_work"
         const val EXTRA_CYCLES = "extra_cycles"

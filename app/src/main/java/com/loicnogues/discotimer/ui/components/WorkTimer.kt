@@ -1,4 +1,4 @@
-package com.anonymous.discotimer.ui.components
+package com.loicnogues.discotimer.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -18,8 +18,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.ExperimentalTextApi
-import com.anonymous.discotimer.R
-import com.anonymous.discotimer.ui.theme.BorderColor
+import com.loicnogues.discotimer.R
+import com.loicnogues.discotimer.ui.theme.BorderColor
 
 @OptIn(ExperimentalTextApi::class)
 private val RobotoFlex = FontFamily(

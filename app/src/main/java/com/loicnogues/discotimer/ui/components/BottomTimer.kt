@@ -1,4 +1,4 @@
-package com.anonymous.discotimer.ui.components
+package com.loicnogues.discotimer.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,10 +20,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.anonymous.discotimer.R
-import com.anonymous.discotimer.ui.theme.BorderColor
-import com.anonymous.discotimer.ui.theme.CurrentIntervalBackground
-import com.anonymous.discotimer.ui.theme.OverlayBackground
+import com.loicnogues.discotimer.R
+import com.loicnogues.discotimer.ui.theme.BorderColor
+import com.loicnogues.discotimer.ui.theme.CurrentIntervalBackground
+import com.loicnogues.discotimer.ui.theme.OverlayBackground
 
 @Composable
 fun BottomTimer(

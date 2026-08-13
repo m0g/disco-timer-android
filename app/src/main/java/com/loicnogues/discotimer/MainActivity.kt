@@ -1,4 +1,4 @@
-package com.anonymous.discotimer
+package com.loicnogues.discotimer
 
 import android.Manifest
 import android.content.Intent
@@ -17,8 +17,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.anonymous.discotimer.ui.navigation.DiscoTimerNavigation
-import com.anonymous.discotimer.ui.theme.DiscoTimerTheme
+import com.loicnogues.discotimer.ui.navigation.DiscoTimerNavigation
+import com.loicnogues.discotimer.ui.theme.DiscoTimerTheme
 
 class MainActivity : ComponentActivity() {
 

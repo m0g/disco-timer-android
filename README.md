@@ -20,6 +20,23 @@ A native Android workout interval timer built with Kotlin and Jetpack Compose.
 - Settings persisted across sessions
 - Back button confirmation dialog
 
+## Install
+
+### Obtainium (recommended)
+
+Get updates straight from GitHub releases with [Obtainium](https://github.com/ImranR98/Obtainium):
+
+1. Install Obtainium from [obtainium.imranr.dev](https://obtainium.imranr.dev/)
+2. Tap **Add App** and enter this repository URL:
+   `https://github.com/m0g/disco-timer-android`
+3. Obtainium will install the latest release and notify you about updates
+
+Or tap this link on your device: [Add to Obtainium](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/m0g/disco-timer-android)
+
+### Manual
+
+Download the latest APK from the [releases page](https://github.com/m0g/disco-timer-android/releases) and install it.
+
 ## Tech Stack
 
 - **Language**: Kotlin

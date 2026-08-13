@@ -1,4 +1,4 @@
-package com.anonymous.discotimer.data
+package com.loicnogues.discotimer.data
 
 data class TimerState(
     val work: Int = 40,

@@ -1,13 +1,13 @@
-package com.anonymous.discotimer.viewmodel
+package com.loicnogues.discotimer.viewmodel
 
 import android.app.Application
 import android.content.Intent
 import android.os.Build
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.anonymous.discotimer.data.TimerPreferences
-import com.anonymous.discotimer.data.TimerState
-import com.anonymous.discotimer.service.TimerService
+import com.loicnogues.discotimer.data.TimerPreferences
+import com.loicnogues.discotimer.data.TimerState
+import com.loicnogues.discotimer.service.TimerService
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

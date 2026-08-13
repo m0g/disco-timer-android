@@ -1,4 +1,4 @@
-package com.anonymous.discotimer.ui.screens
+package com.loicnogues.discotimer.ui.screens
 
 import android.view.WindowManager
 import androidx.activity.compose.BackHandler
@@ -19,11 +19,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import com.anonymous.discotimer.R
-import com.anonymous.discotimer.ui.components.*
-import com.anonymous.discotimer.ui.theme.BorderColor
-import com.anonymous.discotimer.utils.TimeFormatter
-import com.anonymous.discotimer.viewmodel.TimerViewModel
+import com.loicnogues.discotimer.R
+import com.loicnogues.discotimer.ui.components.*
+import com.loicnogues.discotimer.ui.theme.BorderColor
+import com.loicnogues.discotimer.utils.TimeFormatter
+import com.loicnogues.discotimer.viewmodel.TimerViewModel
 import androidx.compose.ui.text.style.TextAlign
 
 @Composable

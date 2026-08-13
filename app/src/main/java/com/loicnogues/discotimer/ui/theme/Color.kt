@@ -1,4 +1,4 @@
-package com.anonymous.discotimer.ui.theme
+package com.loicnogues.discotimer.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

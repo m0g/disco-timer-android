@@ -81,50 +81,46 @@ APK location: `app/build/outputs/apk/release/app-release-unsigned.apk`
    Remember the passwords you set!
 
 2. **Create keystore.properties**
-   Create a file `native-android/keystore.properties`:
+   Create a file `keystore.properties` in the project root (it is gitignored):
    ```properties
-   storePassword=YOUR_STORE_PASSWORD
-   keyPassword=YOUR_KEY_PASSWORD
-   keyAlias=discotimer
    storeFile=disco-timer.keystore
+   storePassword=YOUR_STORE_PASSWORD
+   keyAlias=discotimer
+   keyPassword=YOUR_KEY_PASSWORD
    ```
 
-3. **Update build.gradle.kts**
-   Add to `app/build.gradle.kts` before the `android {` block:
-   
-   ```kotlin
-   val keystorePropertiesFile = rootProject.file("keystore.properties")
-   val keystoreProperties = Properties()
-   if (keystorePropertiesFile.exists()) {
-       keystoreProperties.load(FileInputStream(keystorePropertiesFile))
-   }
-   ```
-   
-   Then inside `android { ... }` block, add signing config:
-   
-   ```kotlin
-   signingConfigs {
-       create("release") {
-           keyAlias = keystoreProperties["keyAlias"] as String
-           keyPassword = keystoreProperties["keyPassword"] as String
-           storeFile = file(keystoreProperties["storeFile"] as String)
-           storePassword = keystoreProperties["storePassword"] as String
-       }
-   }
-   
-   buildTypes {
-       release {
-           signingConfig = signingConfigs.getByName("release")
-           // ... rest of config
-       }
-   }
-   ```
+   The build script (`app/build.gradle.kts`) picks this file up automatically.
+   Alternatively, set the `KEYSTORE_FILE`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`,
+   and `KEY_PASSWORD` environment variables (this is what CI uses).
 
-4. **Build signed release**
+3. **Build signed release**
    ```bash
    ./gradlew assembleRelease
    ```
    APK location: `app/build/outputs/apk/release/app-release.apk`
+
+## Publishing a Release (GitHub / Obtainium)
+
+Releases are built and published automatically by `.github/workflows/release.yml`.
+
+1. **One-time setup**: add these repository secrets on GitHub
+   (Settings → Secrets and variables → Actions):
+   - `KEYSTORE_BASE64` — the keystore file, base64-encoded:
+     `base64 -i disco-timer.keystore | pbcopy`
+   - `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD` — matching the keystore
+
+2. **Release**: bump `versionCode` and `versionName` in `app/build.gradle.kts`,
+   commit, then tag and push:
+   ```bash
+   git tag v0.2.2
+   git push origin master v0.2.2
+   ```
+
+   The workflow builds a signed APK and attaches it to a GitHub release, which
+   Obtainium picks up automatically.
+
+   ⚠️ Back up the keystore somewhere safe. All future releases must be signed
+   with the same key, or users will have to uninstall/reinstall the app.
 
 ## Troubleshooting
 

@@ -2,8 +2,10 @@ import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
+    // AGP 9 has built-in Kotlin support, so org.jetbrains.kotlin.android is
+    // neither needed nor allowed (it clashes over the `kotlin` extension).
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 val keystoreProperties = Properties().apply {
@@ -17,13 +19,16 @@ fun signingValue(envKey: String, propertyKey: String): String? =
     System.getenv(envKey) ?: keystoreProperties.getProperty(propertyKey)
 
 android {
-    namespace = "com.anonymous.discotimer"
-    compileSdk = 34
+    namespace = "com.loicnogues.discotimer"
+    compileSdk = 36
+    // Pinned so it matches the SDK provided by flake.nix, which AGP cannot
+    // add to (the nix store is read-only).
+    buildToolsVersion = "36.0.0"
 
     defaultConfig {
-        applicationId = "com.anonymous.discotimer"
+        applicationId = "com.loicnogues.discotimer"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 2
         versionName = "0.2.2"
 
@@ -47,7 +52,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -59,15 +65,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
     buildFeatures {
         compose = true
         buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4"
     }
     packaging {
         resources {
