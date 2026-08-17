@@ -2,6 +2,51 @@
 
 A native Android workout interval timer built with Kotlin and Jetpack Compose.
 
+🪩 Disco Timer is a workout interval timer that does one thing well: it counts
+your intervals out loud so you can keep your eyes on your workout instead of
+your phone.
+
+No account. No ads. No tracking. No internet connection required.
+
+SET UP IN SECONDS
+Four numbers and you're training:
+• Work — how long each interval lasts
+• Cycles — how many intervals per set
+• Sets — how many times to repeat
+• Prepare — an optional countdown before the first interval
+
+The total workout time and interval count update as you type, so you know
+exactly what you're in for before you press Start. Your settings are saved
+automatically for next time.
+
+AUDIO CUES YOU DON'T HAVE TO LOOK AT
+• A whistle marks the start of every interval
+• Three beeps count you down to the next one
+• A finish sound when the workout is done
+• Every cue is paired with a vibration
+• One tap mutes everything if you'd rather train to your own music
+
+BUILT FOR THE MIDDLE OF A SET
+• Big, readable countdown with your current set and cycle at a glance
+• Screen stays awake for the whole workout
+• Pause and resume with one tap
+• Scroll through the interval list and jump straight to any interval — handy
+when you need to restart a round or skip ahead
+• Keeps running in the background, with a live countdown in your notification
+shade, so you can lock your screen or switch apps
+
+PERFECT FOR
+HIIT, Tabata, EMOM, circuit training, boxing and MMA rounds, CrossFit style
+workouts, stretching and mobility routines, running intervals, plank
+challenges, or anything else that needs a repeating clock.
+
+LIGHT AND PRIVATE
+Disco Timer is a small native Android app. It asks for no internet permission,
+collects nothing about you, and sends nothing anywhere. Everything you set
+stays on your device.
+
+Free, and free of nonsense. Set your intervals, hit start, and go.
+
 ## Screenshots
 
 <p align="center">
